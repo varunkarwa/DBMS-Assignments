@@ -1,0 +1,230 @@
+Microsoft Windows [Version 10.0.18362.778]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Users\varun karwa>cd "C:\Program Files\MySQL\MySQL Server 8.0"\bin
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>#1. Find the professor details and department details using NATURAL JOIN.
+mysql> select * from department natural join professor;
++---------+-----------+---------+------------+------------+-------------+--------+------------+--------------------+------------+---------+
+| dept_id | dept_name | prof_id | prof_fname | prof_lname | designation | salary | doj        | email              | phone      | city    |
++---------+-----------+---------+------------+------------+-------------+--------+------------+--------------------+------------+---------+
+|     101 | COMP      |     101 | Onkar      | Litake     | Asst. Prof  |  30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune    |
+|     103 | EnTC      |     102 | Vaibhav    | Pallod     | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai  |
+|     102 | IT        |     103 | Yash       | Agrawal    | Asst. Prof  |  35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune    |
+|     101 | COMP      |     104 | Karan      | Kangude    | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur  |
+|     104 | FE        |     105 | Atharva    | Joshi      | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai  |
+|     103 | EnTC      |     106 | Chandra    | Azhad      | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai  |
+|     102 | IT        |     107 | Meena      | Kumari     | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur   |
+|     104 | FE        |     108 | Lakshmi    | Baviskar   | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi   |
+|     103 | EnTC      |     109 | Rohit      | Sharma     | Prof        |  60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune    |
+|     101 | COMP      |     110 | Tarrak     | Mehta      | HOD         |  75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon |
++---------+-----------+---------+------------+------------+-------------+--------+------------+--------------------+------------+---------+
+10 rows in set (0.01 sec)
+
+mysql>#2.Find the prof_id,prof_name and shift.
+mysql> select prof_id,prof_fname,prof_lname,shift from professor inner join shift using(prof_id);
++---------+------------+------------+---------+
+| prof_id | prof_fname | prof_lname | shift   |
++---------+------------+------------+---------+
+|     101 | Onkar      | Litake     | Morning |
+|     102 | Vaibhav    | Pallod     | Morning |
+|     103 | Yash       | Agrawal    | Evening |
+|     104 | Karan      | Kangude    | Morning |
+|     105 | Atharva    | Joshi      | Evening |
+|     106 | Chandra    | Azhad      | Morning |
+|     107 | Meena      | Kumari     | Morning |
+|     108 | Lakshmi    | Baviskar   | Evening |
+|     109 | Rohit      | Sharma     | Evening |
+|     110 | Tarrak     | Mehta      | Morning |
++---------+------------+------------+---------+
+10 rows in set (0.00 sec)
+
+mysql>#3.List all the department details and the corresponding names of professors in the same department.
+mysql> select department.dept_id,dept_name,prof_fname from department left outer join professor on department.dept_id=professor.dept_id;
++---------+-----------+------------+
+| dept_id | dept_name | prof_fname |
++---------+-----------+------------+
+|     101 | COMP      | Onkar      |
+|     101 | COMP      | Karan      |
+|     102 | IT        | Yash       |
+|     102 | IT        | Meena      |
+|     103 | EnTC      | Vaibhav    |
+|     103 | EnTC      | Chandra    |
+|     103 | EnTC      | Rohit      |
+|     103 | EnTC      | Siddhi     |
+|     104 | FE        | Atharva    |
+|     104 | FE        | Lakshmi    |
+|     105 | Civil     | NULL       |
++---------+-----------+------------+
+11 rows in set (0.00 sec)
+
+mysql>#4.List all professors and the corresponding name of the department.
+mysql> select dept_name,prof_id,prof_fname,prof_lname from professor right outer join department on department.dept_id=professor.dept_id;
++-----------+---------+------------+------------+
+| dept_name | prof_id | prof_fname | prof_lname |
++-----------+---------+------------+------------+
+| COMP      |     101 | Onkar      | Litake     |
+| COMP      |     104 | Karan      | Kangude    |
+| IT        |     103 | Yash       | Agrawal    |
+| IT        |     107 | Meena      | Kumari     |
+| EnTC      |     102 | Vaibhav    | Pallod     |
+| EnTC      |     106 | Chandra    | Azhad      |
+| EnTC      |     109 | Rohit      | Sharma     |
+| EnTC      |     111 | Siddhi     | Nirmale    |
+| FE        |     105 | Atharva    | Joshi      |
+| FE        |     108 | Lakshmi    | Baviskar   |
+| Civil     |    NULL | NULL       | NULL       |
++-----------+---------+------------+------------+
+11 rows in set (0.01 sec)
+
+mysql>#5.Display professor name,dept_name,shift,salary where prof_id=101.
+mysql> select prof_fname,dept_name,shift,salary from professor inner join department using(dept_id) inner join shift using(prof_id) where professor.prof_id=101;
++------------+-----------+---------+--------+
+| prof_fname | dept_name | shift   | salary |
++------------+-----------+---------+--------+
+| Onkar      | COMP      | Morning |  30000 |
++------------+-----------+---------+--------+
+1 row in set (0.00 sec)
+
+mysql>#6.List the total number of professor in each department.
+mysql> select Professor.dept_id,dept_name,count(*) from department left join professor on professor.dept_id=department.dept_id group by dept_id;
++---------+-----------+----------+
+| dept_id | dept_name | count(*) |
++---------+-----------+----------+
+|     101 | COMP      |        2 |
+|     102 | IT        |        2 |
+|     103 | EnTC      |        4 |
+|     104 | FE        |        2 |
+|    NULL | Civil     |        1 |
++---------+-----------+----------+
+5 rows in set (0.00 sec)
+
+mysql>#7.List the prof_id associated department and the dept_name having name 'computer'.
+mysql>select prof_id,prof_fname,prof_lname,dept_name from professor join department using(dept_id) where prof_id in(select prof_id from  professor join department using (dept_id) where dept_name="COMP");
++---------+------------+------------+-----------+
+| prof_id | prof_fname | prof_lname | dept_name |
++---------+------------+------------+-----------+
+|     101 | Onkar      | Litake     | COMP      |
+|     104 | Karan      | Kangude    | COMP      |
+|     110 | Tarrak     | Mehta      | COMP      |
++---------+------------+------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql>#8. Find the name of all departments where the professor joined in year 2015(or date of joining is 1-1-2015).
+mysql> select dept_name from department where dept_id in(select dept_id from professor where year(doj)=2015);
++-----------+
+| dept_name |
++-----------+
+| COMP      |
+| IT        |
+| FE        |
++-----------+
+3 rows in set (0.01 sec)
+
+mysql>#9.Create view showing professor and shift details.
+mysql> create view proff as select * from professor join shift using(prof_id);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from proff;
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+---------+-------------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email              | phone      | city    | shift   | working_hrs |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+---------+-------------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |  30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune    | Morning |           6 |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai  | Morning |           4 |
+|     103 | Yash       | Agrawal    |     102 | Asst. Prof  |  35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune    | Evening |           7 |
+|     104 | Karan      | Kangude    |     101 | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur  | Morning |           6 |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai  | Evening |           6 |
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai  | Morning |           5 |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur   | Morning |           8 |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi   | Evening |           6 |
+|     109 | Rohit      | Sharma     |     103 | Prof        |  60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune    | Evening |           6 |
+|     110 | Tarrak     | Mehta      |     101 | HOD         |  75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon | Morning |           4 |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+---------+-------------+
+10 rows in set (0.02 sec)
+
+mysql>#10.Perform Manipulation on simple view Insert,Update,Delete,Drop View.
+mysql> create view prof_view as select * from professor;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into prof_view values(111,'Siddhi','Nirmale',103,'Prof',55000,'2014-01-01','nirmale@gmail.com',8654792310,'Mumbai');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from professor;
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email              | phone      | city    |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |  30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune    |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai  |
+|     103 | Yash       | Agrawal    |     102 | Asst. Prof  |  35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune    |
+|     104 | Karan      | Kangude    |     101 | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur  |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai  |
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai  |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur   |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi   |
+|     109 | Rohit      | Sharma     |     103 | Prof        |  60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune    |
+|     110 | Tarrak     | Mehta      |     101 | HOD         |  75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon |
+|     111 | Siddhi     | Nirmale    |     103 | Prof        |  55000 | 2014-01-01 | nirmale@gmail.com  | 8654792310 | Mumbai  |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+11 rows in set (0.00 sec)
+
+mysql> update prof_view set salary=60000 where prof_id=111;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from professor;
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email              | phone      | city    |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |  30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune    |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai  |
+|     103 | Yash       | Agrawal    |     102 | Asst. Prof  |  35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune    |
+|     104 | Karan      | Kangude    |     101 | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur  |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai  |
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai  |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur   |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi   |
+|     109 | Rohit      | Sharma     |     103 | Prof        |  60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune    |
+|     110 | Tarrak     | Mehta      |     101 | HOD         |  75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon |
+|     111 | Siddhi     | Nirmale    |     103 | Prof        |  60000 | 2014-01-01 | nirmale@gmail.com  | 8654792310 | Mumbai  |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+11 rows in set (0.01 sec)
+
+mysql> delete from prof_view where prof_id=110;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from professor;
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+--------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email              | phone      | city   |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+--------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |  30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune   |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai |
+|     103 | Yash       | Agrawal    |     102 | Asst. Prof  |  35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune   |
+|     104 | Karan      | Kangude    |     101 | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai |
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur  |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi  |
+|     109 | Rohit      | Sharma     |     103 | Prof        |  60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune   |
+|     111 | Siddhi     | Nirmale    |     103 | Prof        |  60000 | 2014-01-01 | nirmale@gmail.com  | 8654792310 | Mumbai |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+--------+
+10 rows in set (0.00 sec)
+
+mysql> drop view prof_view;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from prof_view;
+ERROR 1146 (42S02): Table 'assignment3.prof_view' doesn't exist 

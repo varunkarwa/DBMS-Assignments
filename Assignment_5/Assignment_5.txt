@@ -1,0 +1,179 @@
+Assignment 5
+
+c:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 45
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use assignment5
+Database changed
+
+mysql>create table Customer(cust_id int primary key,Name varchar(20),DateofPayment date,NameofScheme varchar(10), Status varchar(2));
+Query Ok, 0 rows affected (0.05 sec)
+
+mysql> desc customer;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| cust_id       | int         | NO   | PRI | NULL    |       |
+| Name          | varchar(20) | YES  |     | NULL    |       |
+| DateofPayment | date        | YES  |     | NULL    |       |
+| NameofScheme  | varchar(10) | YES  |     | NULL    |       |
+| Status        | varchar(2)  | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> create table Fine (cust_id int,date2 date,fine_amount int,foreign key(cust_id) references Customer(cust_id) on delete cascade);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc fine;
++-------------+------+------+-----+---------+-------+
+| Field       | Type | Null | Key | Default | Extra |
++-------------+------+------+-----+---------+-------+
+| cust_id     | int  | YES  | MUL | NULL    |       |
+| date2       | date | YES  |     | NULL    |       |
+| fine_amount | int  | YES  |     | NULL    |       |
++-------------+------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> insert into Customer values(1,"Onkar","2020/08/01","Savings","N");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(2,"Vinay","2020/09/04","Recurring Deposit","N");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(3,"Suman","2020/08/25","Savings","N");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(4,"Sasuke","2020/08/15","Recurring Deposit","N");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(5,"Jenifer","2020/08/21","Fixed Deposit","N");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(6,"Shalak","2020/08/30","Fixed Deposit","P");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> delimiter /
+mysql>  create procedure fine_Calculation(in id int,in scheme varchar(20))
+    ->           begin
+    ->             declare curr_date,delay_date date;
+    ->             declare diff int;
+    ->             declare fine_amount int;
+    ->             declare stat varchar(20);
+    ->             declare exit handler for not found
+    ->             select 'Record Not Found' as message;
+    ->             select DateOfPayment into delay_date from customer where cust_id=id and NameOfScheme=scheme;
+    ->             select current_date() into curr_date;
+    ->             select Status into stat from customer where cust_id=id;
+    ->             if(stat!='N') then
+    ->              signal sqlstate '45000'
+    ->                set message_text='Customer has already paid!';
+    ->             else
+    ->              set diff=datediff(curr_date,delay_date);
+    ->              if(diff>=15 and diff<=30) then
+    ->                 set fine_amount=diff*5;
+    ->             elseif(diff>30) then
+    ->                set fine_amount=(diff-30)*50+1500;
+    ->             end if;
+    ->             insert into fine values(id,curr_date,fine_amount);
+    ->             update customer set status='P' where cust_id=id;
+    ->             end if;
+    ->          end;
+    -> /
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> delimiter ;
+mysql> call fine_Calculation(1,"Savings");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from fine;
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
++---------+------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> select * from Customer;
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | N      |
+|       3 | Suman   | 2020-08-25    | Savings           | N      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | N      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> call fine_Calculation(2,"Recurring Deposit");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from fine;
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
+|       2 | 2020-09-09 |        NULL |
++---------+------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from Customer;
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | N      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | N      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> call fine_Calculation(6,"Fixed Deposit");
+ERROR 1644 (45000): Customer has already paid!
+mysql> call fine_Calculation(3,"Savings");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from fine;
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
+|       2 | 2020-09-09 |        NULL |
+|       3 | 2020-09-09 |          75 |
++---------+------------+-------------+
+3 rows in set (0.01 sec)
+
+mysql> select * from Customer;
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | P      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | N      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.01 sec)
+
+mysql> call fine_Calculation(9,'fixed_deposit');
++------------------+
+| message          |
++------------------+
+| Record Not Found |
++------------------+
+1 row in set (0.01 sec)

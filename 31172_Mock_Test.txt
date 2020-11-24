@@ -1,0 +1,226 @@
+SQL queries using SQL DML statements: Insert, Select, Update, Delete with operators, functions, and set operator. 
+Consider two relations. 
+Emp( empId,empName,empSal,empDeptId)  
+Dept(deptId int, deptName varchar(10))      
+ 
+
+Microsoft Windows [Version 10.0.19041.508]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\Users\varun karwa>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql>#1. Create database ASS_B1.
+mysql> create database ASS_B1;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> use ASS_B1
+Database changed
+
+mysql>#2. Create table Emp and Dept. 
+mysql> create table Dept(deptId int primary key,deptName varchar(30));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> create table Emp(empId int primary key,empName varchar(20),empSal int,empDeptId int,foreign key(empDeptId) references Dept(deptId) on delete cascade on update cascade);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql>#4. Insert few Record.
+mysql> insert into Dept values(10,"Computer");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Dept values(20,"Information Technology");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into Dept values(30,"Electronic n Telecommunication");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Dept values(40,"Applied Science");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Dept;
++--------+--------------------------------+
+| deptId | deptName                       |
++--------+--------------------------------+
+|     10 | Computer                       |
+|     20 | Information Technology         |
+|     30 | Electronic n Telecommunication |
+|     40 | Applied Science                |
++--------+--------------------------------+
+4 rows in set (0.01 sec)
+
+mysql> insert into Emp values(101,"Aditya",45000,30);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Emp values(102,"Siddesh",40000,20);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(103,"Tejas",20000,40);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(104,"Prachi",50000,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(105,"Ashwini",15000,20);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(106,"Akshay",65000,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(107,"Siddhi",55000,30);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(108,"Onkar",35000,40);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(109,"Vinay",20000,30);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Emp values(110,"Varun",25000,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Emp;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   101 | Aditya  |  45000 |        30 |
+|   102 | Siddesh |  40000 |        20 |
+|   103 | Tejas   |  20000 |        40 |
+|   104 | Prachi  |  50000 |        10 |
+|   105 | Ashwini |  15000 |        20 |
+|   106 | Akshay  |  65000 |        10 |
+|   107 | Siddhi  |  55000 |        30 |
+|   108 | Onkar   |  35000 |        40 |
+|   109 | Vinay   |  20000 |        30 |
+|   110 | Varun   |  25000 |        10 |
++-------+---------+--------+-----------+
+10 rows in set (0.00 sec)
+
+mysql>#5.Display information of those  emp whose salary is greater than 20000.
+mysql> select * from Emp where empSal>20000;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   101 | Aditya  |  45000 |        30 |
+|   102 | Siddesh |  40000 |        20 |
+|   104 | Prachi  |  50000 |        10 |
+|   106 | Akshay  |  65000 |        10 |
+|   107 | Siddhi  |  55000 |        30 |
+|   108 | Onkar   |  35000 |        40 |
+|   110 | Varun   |  25000 |        10 |
++-------+---------+--------+-----------+
+7 rows in set (0.01 sec)
+
+mysql>#6.List the employee details in the ascending order of their basic salary.
+mysql> select * from Emp order by empSal;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   105 | Ashwini |  15000 |        20 |
+|   103 | Tejas   |  20000 |        40 |
+|   109 | Vinay   |  20000 |        30 |
+|   110 | Varun   |  25000 |        10 |
+|   108 | Onkar   |  35000 |        40 |
+|   102 | Siddesh |  40000 |        20 |
+|   101 | Aditya  |  45000 |        30 |
+|   104 | Prachi  |  50000 |        10 |
+|   107 | Siddhi  |  55000 |        30 |
+|   106 | Akshay  |  65000 |        10 |
++-------+---------+--------+-----------+
+10 rows in set (0.01 sec)
+
+mysql>#7.List employees belonging to department 30, 40, or 10.
+mysql> select * from Emp where empDeptId = 30 or empDeptId = 40 or empDeptId = 10;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   101 | Aditya  |  45000 |        30 |
+|   103 | Tejas   |  20000 |        40 |
+|   104 | Prachi  |  50000 |        10 |
+|   106 | Akshay  |  65000 |        10 |
+|   107 | Siddhi  |  55000 |        30 |
+|   108 | Onkar   |  35000 |        40 |
+|   109 | Vinay   |  20000 |        30 |
+|   110 | Varun   |  25000 |        10 |
++-------+---------+--------+-----------+
+8 rows in set (0.01 sec)
+
+mysql>#8.List the employee details whose salary is between 10000 to 30000.
+mysql> select * from Emp where empSal between 10000 and 30000;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   103 | Tejas   |  20000 |        40 |
+|   105 | Ashwini |  15000 |        20 |
+|   109 | Vinay   |  20000 |        30 |
+|   110 | Varun   |  25000 |        10 |
++-------+---------+--------+-----------+
+4 rows in set (0.01 sec)
+
+mysql>#9.List the employee details whose name starts with A and salary is greater than 20000.
+mysql> select * from Emp where empName like "A%" and empSal>20000;
++-------+---------+--------+-----------+
+| empId | empName | empSal | empDeptId |
++-------+---------+--------+-----------+
+|   101 | Aditya  |  45000 |        30 |
+|   106 | Akshay  |  65000 |        10 |
++-------+---------+--------+-----------+
+2 rows in set (0.00 sec)
+
+mysql>#10.List the names of emp whose are working in 'Computer' department.
+mysql> select empName from Emp where empDeptId in (select deptId from Dept where deptName = "Computer");
++---------+
+| empName |
++---------+
+| Prachi  |
+| Akshay  |
+| Varun   |
++---------+
+3 rows in set (0.00 sec)
+
+mysql>#11.Change deptName from 'Computer' to 'Computer Engineering'. 
+mysql> update Dept set deptName = "Computer Engineering" where deptId = 10 ;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Dept;
++--------+--------------------------------+
+| deptId | deptName                       |
++--------+--------------------------------+
+|     10 | Computer Engineering           |
+|     20 | Infromation Technology         |
+|     30 | Electronic n Telecommunication |
+|     40 | Applied Science                |
++--------+--------------------------------+
+4 rows in set (0.01 sec)
+
+mysql>#12.List the total salary, maximum and minimum salary and average salary of the  employees, for department 30. 
+mysql> select min(empSal), max(empSal), avg(empSal), sum(empSal)from Emp where empDeptId=30;
++-------------+-------------+-------------+-------------+
+| min(empSal) | max(empSal) | avg(empSal) | sum(empSal) |
++-------------+-------------+-------------+-------------+
+|       20000 |       55000 |  40000.0000 |      120000 |
++-------------+-------------+-------------+-------------+
+1 row in set (0.02 sec)
+
+mysql>#13.List average sal of each deptID. 
+mysql> select avg(empSal),empDeptId from Emp group by (empDeptId);
++-------------+-----------+
+| avg(empSal) | empDeptId |
++-------------+-----------+
+|  46666.6667 |        10 |
+|  27500.0000 |        20 |
+|  40000.0000 |        30 |
+|  27500.0000 |        40 |
++-------------+-----------+
+4 rows in set (0.01 sec)

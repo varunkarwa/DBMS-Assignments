@@ -1,0 +1,124 @@
+mysql> use assignment7
+Database changed
+mysql> create table Customer(cust_id int primary key,Name varchar(20),total_purchase int);
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> create table Category(cust_id int, Name varchar(20),class varchar(10),foreign key(cust_id) references Customer(cust_id) on delete cascade on update cascade);
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> insert into Customer values(1,"Prachi Wagh",15999);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(2,"Varun Karwa",7590);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(3,"Tejas Dahad",3799);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(4,"Siddhi Nirmale",6374);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(5,"Vinay Nair",4999);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Customer values(6,"Himaja Teni",19999);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Customer;
++---------+----------------+----------------+
+| cust_id | Name           | total_purchase |
++---------+----------------+----------------+
+|       1 | Prachi Wagh    |          15999 |
+|       2 | Varun Karwa    |           7590 |
+|       3 | Tejas Dahad    |           3799 |
+|       4 | Siddhi Nirmale |           6374 |
+|       5 | Vinay Nair     |           4999 |
+|       6 | Himaja Teni    |          19999 |
++---------+----------------+----------------+
+6 rows in set (0.01 sec)
+
+mysql> create procedure proc_Class()
+    -> begin
+    -> declare class varchar(10);
+    -> declare cust_name varchar(20);
+    -> declare id int;
+    -> declare purchase int;
+    -> declare v_finished int default 0;
+    -> declare cur_name CURSOR FOR select cust_id,Name,total_purchase from Customer;
+    -> declare continue handler for 1062 select 'Already present' as message;
+    -> declare continue handler for not found set v_finished=1;
+    -> open cur_name;
+    -> read_loop: loop
+    -> fetch cur_name into id,cust_name,purchase;
+    -> if v_finished=1 then
+    -> leave read_loop;
+    -> end if;
+    -> if purchase<=20000 and purchase>=10000 then set class="platinum";
+    -> elseif purchase<=9999 and purchase>=5000  then set class="gold";
+    -> elseif purchase<=4999 and purchase>=2000 then set class="silver";
+    -> end if;
+    -> insert into Category values(id,cust_name,class);
+    -> end loop read_loop;
+    -> close cur_name;
+    -> end;//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call proc_Class()//
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> select * from Category//
++---------+----------------+----------+
+| cust_id | Name           | class    |
++---------+----------------+----------+
+|       1 | Prachi Wagh    | platinum |
+|       2 | Varun Karwa    | gold     |
+|       3 | Tejas Dahad    | silver   |
+|       4 | Siddhi Nirmale | gold     |
+|       5 | Vinay Nair     | silver   |
+|       6 | Himaja Teni    | platinum |
++---------+----------------+----------+
+6 rows in set (0.01 sec)
+
+mysql> create function getClass(purchase int)
+    -> returns varchar(10)
+    -> deterministic
+    -> begin
+    -> declare class varchar(10);
+    -> if purchase<=20000 and purchase>=10000 then set class="platinum";
+    -> elseif purchase<=9999 and purchase>=5000 then set class="gold";
+    -> elseif purchase<=4999 and purchase>=2000 then set class="silver";
+    -> end if;
+    -> return class;
+    -> end;//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> create procedure proc_Class1(in purchase int,out class varchar(10))
+    -> begin
+    -> set class=getClass(purchase);
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call proc_Class1(4999,@class)//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select @class//
++--------+
+| @class |
++--------+
+| silver |
++--------+
+1 row in set (0.00 sec)
+
+mysql> call proc_Class1(10000,@class)//
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select @class//
++----------+
+| @class   |
++----------+
+| platinum |
++----------+
+1 row in set (0.00 sec)
+
+mysql>

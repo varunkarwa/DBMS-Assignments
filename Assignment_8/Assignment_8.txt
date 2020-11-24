@@ -1,0 +1,284 @@
+mysql> use assignment8
+Database changed
+mysql> create table Student(RollNo int primary key,Name varchar(30),DateofAdmission date,Branch varchar(15),Percent int,Status varchar(10));
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> create table Alumni(RollNo int,Name varchar(30),DateofAdmission date,Branch varchar(15),Percent int,Status varchar(10));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into Student values(1,"Varun Karwa","2018-08-17","Comp",95,"Pass");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values(2,"Prachi Wagh","2018-07-31","IT",99,"Pass");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values(3,"Tejas Dahad","2018-08-01","EnTC",33,"Fail");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Student values(4,"Pratik Agrawal","2018-08-28","IT",10,"Fail");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Student;
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      1 | Varun Karwa    | 2018-08-17      | Comp   |      95 | Pass   |
+|      2 | Prachi Wagh    | 2018-07-31      | IT     |      99 | Pass   |
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      33 | Fail   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      10 | Fail   |
++--------+----------------+-----------------+--------+---------+--------+
+4 rows in set (0.01 sec)
+
+mysql> delimiter //
+mysql> create trigger insertInAlumni
+    -> before delete on Student
+    -> for each row
+    -> begin
+    -> insert into Alumni values(old.RollNo,old.Name,old.DateofAdmission,old.Branch,old.Percent,old.Status);
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> create trigger onUpdateStatus
+    -> after update on Student
+    -> for each row
+    -> begin
+    -> insert into Alumni values(old.RollNo,old.Name,old.DateofAdmission,old.Branch,new.Percent,"Pass");
+    -> end;//
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delete from Student where Status = "Pass"//
+Query OK, 2 rows affected (0.02 sec)
+
+mysql> select * from Alumni//
++--------+-------------+-----------------+--------+---------+--------+
+| RollNo | Name        | DateofAdmission | Branch | Percent | Status |
++--------+-------------+-----------------+--------+---------+--------+
+|      1 | Varun Karwa | 2018-08-17      | Comp   |      95 | Pass   |
+|      2 | Prachi Wagh | 2018-07-31      | IT     |      99 | Pass   |
++--------+-------------+-----------------+--------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from Student//
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      33 | Fail   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      10 | Fail   |
++--------+----------------+-----------------+--------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> update Student set Percent = 89, Status = "Pass" where RollNo=3//
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Alumni//
++--------+-------------+-----------------+--------+---------+--------+
+| RollNo | Name        | DateofAdmission | Branch | Percent | Status |
++--------+-------------+-----------------+--------+---------+--------+
+|      1 | Varun Karwa | 2018-08-17      | Comp   |      95 | Pass   |
+|      2 | Prachi Wagh | 2018-07-31      | IT     |      99 | Pass   |
+|      3 | Tejas Dahad | 2018-08-01      | EnTC   |      89 | Pass   |
++--------+-------------+-----------------+--------+---------+--------+
+3 rows in set (0.01 sec)
+
+mysql> select * from Student//
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      89 | Pass   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      10 | Fail   |
++--------+----------------+-----------------+--------+---------+--------+
+2 rows in set (0.01 sec)
+
+mysql> update Student set Percent = 75, Status = "Pass" where RollNo=4//
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Alumni//
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      1 | Varun Karwa    | 2018-08-17      | Comp   |      95 | Pass   |
+|      2 | Prachi Wagh    | 2018-07-31      | IT     |      99 | Pass   |
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      89 | Pass   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      75 | Pass   |
++--------+----------------+-----------------+--------+---------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Student//
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      89 | Pass   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      75 | Pass   |
++--------+----------------+-----------------+--------+---------+--------+
+2 rows in set (0.00 sec)
+
+mysql> delete from Student where Status = "Pass"//
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> select * from Alumni//
++--------+----------------+-----------------+--------+---------+--------+
+| RollNo | Name           | DateofAdmission | Branch | Percent | Status |
++--------+----------------+-----------------+--------+---------+--------+
+|      1 | Varun Karwa    | 2018-08-17      | Comp   |      95 | Pass   |
+|      2 | Prachi Wagh    | 2018-07-31      | IT     |      99 | Pass   |
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      89 | Pass   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      75 | Pass   |
+|      3 | Tejas Dahad    | 2018-08-01      | EnTC   |      89 | Pass   |
+|      4 | Pratik Agrawal | 2018-08-28      | IT     |      75 | Pass   |
++--------+----------------+-----------------+--------+---------+--------+
+6 rows in set (0.00 sec)
+
+******Customer Schema******
+mysql> delimiter //
+mysql> create procedure fine_Calculation(in id int,in scheme varchar(20))
+    ->               begin
+    ->                  declare curr_date,delay_date date;
+    ->                  declare diff int;
+    ->                  declare fine_amount int;
+    ->                  declare stat varchar(20);
+    ->                  declare exit handler for not found
+    ->                  select 'Record Not Found' as message;
+    ->                  select DateOfPayment into delay_date from customer where cust_id=id and NameOfScheme=scheme;
+    ->                  select current_date() into curr_date;
+    ->                  select Status into stat from customer where cust_id=id;
+    ->                  if(stat!='N') then
+    ->                   signal sqlstate '45000'
+    ->                     set message_text='Customer has already paid!';
+    ->                 else
+    ->                   set diff=datediff(curr_date,delay_date);
+    ->                   if(diff>=15 and diff<=30) then
+    ->                      set fine_amount=diff*5;
+    ->                  elseif(diff>30) then
+    ->                     set fine_amount=(diff-30)*50+1500;
+    ->                  end if;
+    ->                 insert into fine values(id,curr_date,fine_amount);
+    ->                 end if;
+    ->               end;
+    -> //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> create trigger insertInFine
+    -> after insert on Fine
+    -> for each row
+    -> begin
+    -> update Customer set Status = "P" where cust_id = new.cust_id;
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.04 sec)
+
+
+mysql> select * from customer//
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | P      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | N      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from Fine//
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
+|       2 | 2020-09-09 |        NULL |
+|       3 | 2020-09-09 |          75 |
++---------+------------+-------------+
+3 rows in set (0.01 sec)
+
+mysql> call fine_Calculation(4,"Recurring Deposit")//
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from fine//
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
+|       2 | 2020-09-09 |        NULL |
+|       3 | 2020-09-09 |          75 |
+|       4 | 2020-10-05 |        2550 |
++---------+------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from customer//
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | P      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | P      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.00 sec)
+
+mysql>create trigger afterCustomer
+     after update on Customer
+     for each row
+     begin
+     declare today,pay_date date;
+     declare diff int;
+     declare amt int;
+     declare status1 varchar(5);
+     set pay_date := old.DateOfPayment;
+     set today := current_date();
+     set diff := datediff(today,pay_date);
+     if(diff>=15 and diff<=30) then
+     set amt := diff*5;
+     elseif(diff>30) then
+     set amt:= (diff-30)*50 + 1500;
+     end if;
+     insert into fine values(old.cust_id,today,amt);
+     end;
+     //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from customer//
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | P      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | P      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | N      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.01 sec)
+
+mysql> update customer set Status="P" where cust_id = 5//
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from Fine//
++---------+------------+-------------+
+| cust_id | date2      | fine_amount |
++---------+------------+-------------+
+|       1 | 2020-09-09 |        1950 |
+|       2 | 2020-09-09 |        NULL |
+|       3 | 2020-09-09 |          75 |
+|       4 | 2020-10-05 |        2550 |
+|       5 | 2020-10-05 |        2250 |
++---------+------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql>mysql> select * from customer//
++---------+---------+---------------+-------------------+--------+
+| cust_id | Name    | DateofPayment | NameofScheme      | Status |
++---------+---------+---------------+-------------------+--------+
+|       1 | Onkar   | 2020-08-01    | Savings           | P      |
+|       2 | Vinay   | 2020-09-04    | Recurring Deposit | P      |
+|       3 | Suman   | 2020-08-25    | Savings           | P      |
+|       4 | Sasuke  | 2020-08-15    | Recurring Deposit | P      |
+|       5 | Jenifer | 2020-08-21    | Fixed Deposit     | P      |
+|       6 | Shalaka | 2020-08-30    | Fixed Deposit     | P      |
++---------+---------+---------------+-------------------+--------+
+6 rows in set (0.01 sec)

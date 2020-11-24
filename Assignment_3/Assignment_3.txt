@@ -1,0 +1,374 @@
+Microsoft Windows [Version 10.0.18362.778]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\Users\varun karwa>cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 12
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database assignment3;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use assignment3;
+Database changed
+mysql> create table department(dept_id int primary key, dept_name varchar(10));
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_id   | int         | NO   | PRI | NULL    |       |
+| dept_name | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> create table professor(prof_id integer primary key,prof_fname varchar(10),prof_lname varchar(10),dept_id integer,designation varchar(10),salaray integer,doj date,email varchar(20),phone bigint,city varchar(10),foreign key(dept_id) references department(dept_id) on delete cascade);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc professor;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| prof_id     | int         | NO   | PRI | NULL    |       |
+| prof_fname  | varchar(10) | YES  |     | NULL    |       |
+| prof_lname  | varchar(10) | YES  |     | NULL    |       |
+| dept_id     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(10) | YES  |     | NULL    |       |
+| salaray     | int         | YES  |     | NULL    |       |
+| doj         | date        | YES  |     | NULL    |       |
+| email       | varchar(20) | YES  |     | NULL    |       |
+| phone       | bigint      | YES  |     | NULL    |       |
+| city        | varchar(10) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+10 rows in set (0.02 sec)
+
+mysql> create table work(prof_id integer,dept_id integer,duration integer,foreign key(dept_id) references department(dept_id) on delete cascade,foreign key(prof_id) references professor(prof_id) on delete cascade);
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc work;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| prof_id  | int  | YES  | MUL | NULL    |       |
+| dept_id  | int  | YES  | MUL | NULL    |       |
+| duration | int  | YES  |     | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> create table shift(prof_id int,shift varchar(10),working_hrs int,foreign key(prof_id) references professor(prof_id) on delete cascade);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc shift;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| prof_id     | int         | YES  | MUL | NULL    |       |
+| shift       | varchar(10) | YES  |     | NULL    |       |
+| working_hrs | int         | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into department values(101,"COMP");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(102,"IT");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(103,"EnTC");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(104,"FE");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Department;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|     101 | COMP      |
+|     102 | IT        |
+|     103 | EnTC      |
+|     104 | FE        |
++---------+-----------+
+4 rows in set (0.00 sec)
+
+mysql> insert into professor values(101,"Onkar","Litake",101,"Asst. Prof",30000,"2015-01-01","litak@gmail.com",9881149694,"Pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(102,"Vaibhav","Pallod",103,"Prof",60000,"2016-01-01","vsp575@gmail.com",9467853145,"Mumbai");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(103,"Yash","Agrawal",102,"Asst. Prof",35000,"2015-04-01","yasha@yahoo.com",7865123955,"Pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(104,"Karan","Kangude",101,"Prof",50000,"2010-08-01","karan12@gmail.com",8465213790,"Nagpur");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(105,"Atharva","Joshi",104,"Prof",45000,"2016-06-15","ajoshi@gmail.com",7945618031,"Amravati");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(106,"Chandra","Azhad",103,"HOD",80000,"2009-01-01","cazhad@gmail.com",9658741230,"Mumbai");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(107,"Meena","Kumari",102,"Asst. Prof",30000,"2014-10-20","meenak@gmail.com",7845632100,"Latur");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(108,"Lakshmi","Baviskar",104,"Prof",40000,"2017-12-03","baviskar@gmail.com",8275234855,"Delhi");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(109,"Rohit","Sharma",103,"Prof",60000,"2018-05-05","sharmaji@gmail.com",9423510048,"Pune");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into professor values(110,"Tarrak","Mehta",101,"HOD",75000,"2014-01-01","mehta@gmail.com",7617209448,"Jalgaon");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from professor;
++---------+------------+------------+---------+-------------+---------+------------+--------------------+------------+----------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salaray | doj        | email              | phone      | city     |
++---------+------------+------------+---------+-------------+---------+------------+--------------------+------------+----------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |   30000 | 2015-01-01 | litak@gmail.com    | 9881149694 | Pune     |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |   60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai   |
+|     103 | Yash       | Agrawal    |     102 | Asst. Prof  |   35000 | 2015-04-01 | yasha@yahoo.com    | 7865123955 | Pune     |
+|     104 | Karan      | Kangude    |     101 | Prof        |   50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur   |
+|     105 | Atharva    | Joshi      |     104 | Prof        |   45000 | 2016-06-15 | ajoshi@gmail.com   | 7945618031 | Amravati |
+|     106 | Chandra    | Azhad      |     103 | HOD         |   80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai   |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |   30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur    |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |   40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi    |
+|     109 | Rohit      | Sharma     |     103 | Prof        |   60000 | 2018-05-05 | sharmaji@gmail.com | 9423510048 | Pune     |
+|     110 | Tarrak     | Mehta      |     101 | HOD         |   75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon  |
++---------+------------+------------+---------+-------------+---------+------------+--------------------+------------+----------+
+10 rows in set (0.01 sec)
+
+mysql> insert into work values(101,101,6);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into work values(102,103,4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(103,102,7);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(104,101,5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(105,104,6);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into work values(106,103,3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(107,102,8);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(108,104,6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(109,103,5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into work values(110,101,4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from work;
++---------+---------+----------+
+| prof_id | dept_id | duration |
++---------+---------+----------+
+|     101 |     101 |        6 |
+|     102 |     103 |        4 |
+|     103 |     102 |        7 |
+|     104 |     101 |        5 |
+|     105 |     104 |        6 |
+|     106 |     103 |        3 |
+|     107 |     102 |        8 |
+|     108 |     104 |        6 |
+|     109 |     103 |        5 |
+|     110 |     101 |        4 |
++---------+---------+----------+
+10 rows in set (0.00 sec)
+
+mysql> insert into shift values(101,'Morning',6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(102,'Morning',4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(103,'Evening',7);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(104,'Morning',6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(105,'Evening',6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(106,'Morning',5);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into shift values(107,'Morning',8);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(108,'Evening',6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(109,'Evening',6);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into shift values(110,'Morning',4);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from shift;
++---------+---------+-------------+
+| prof_id | shift   | working_hrs |
++---------+---------+-------------+
+|     101 | Morning |           6 |
+|     102 | Morning |           4 |
+|     103 | Evening |           7 |
+|     104 | Morning |           6 |
+|     105 | Evening |           6 |
+|     106 | Morning |           5 |
+|     107 | Morning |           8 |
+|     108 | Evening |           6 |
+|     109 | Evening |           6 |
+|     110 | Morning |           4 |
++---------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql>#"Display all professor details with city pune and mumbai and professor first name starting with 'a' or 'd'."
+mysql> select * from professor where prof_fname like "A%" or prof_fname like "D%" and city in("Pune","Mumbai");
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email            | phone      | city   |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+|     105 | Atharva    | Joshi      |     104 | Prof        |  45000 | 2015-01-01 | ajoshi@gmail.com | 7945618031 | Mumbai |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+1 row in set (0.01 sec)
+
+mysql>#"List the number of different cities of professors.(use of distinct)"
+mysql> select distinct city from professor;
++---------+
+| city    |
++---------+
+| Pune    |
+| Mumbai  |
+| Nagpur  |
+| Latur   |
+| Delhi   |
+| Jalgaon |
++---------+
+6 rows in set (0.01 sec)
+
+mysql>#"4. Give 5% increase in salary of the professor with date of joining "2015-01-01"
+mysql> update professor set salary=salary+salary*.05 where doj="2015-01-01";
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql>#"6. Find the names of professor belonging to pune or mumbai"
+mysql> select prof_fname,prof_lname from professor where city = "Pune" or city = "Mumbai";
++------------+------------+
+| prof_fname | prof_lname |
++------------+------------+
+| Onkar      | Litake     |
+| Vaibhav    | Pallod     |
+| Yash       | Agrawal    |
+| Atharva    | Joshi      |
+| Chandra    | Azhad      |
+| Rohit      | Sharma     |
++------------+------------+
+6 rows in set (0.00 sec)
+
+mysql>#"7. Find the professor who joined on date 1-1-2015 as well as in 1-1-2016."
+mysql> select * from professor where doj = '2015-01-01' or doj='2016-01-01';
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email            | phone      | city   |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+|     101 | Onkar      | Litake     |     101 | Asst. Prof  |  31500 | 2015-01-01 | litak@gmail.com  | 9881149694 | Pune   |
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com | 9467853145 | Mumbai |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com | 7945618031 | Mumbai |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+3 rows in set (0.00 sec)
+
+mysql>#"8.1 Find the professor having maximum salary"
+mysql> select * from professor where salary in(select max(salary) from professor);
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email            | phone      | city   |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com | 9658741230 | Mumbai |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+--------+
+1 row in set (0.01 sec)
+
+mysql>"8.2 Names of professor having salary between 10000 and 20000."
+mysql> insert into professor values(111,"Dhanashri","Patil",102,"Asst. Prof",15000,"2013-05-01","patil@gmail.com",8465230127,"Jalgaon");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into professor values(112,"Siddhi","Nirmale",104,"Asst. Prof",17000,"2016-04-15","siddhi@gmail.com",9756412380,"Nagpur");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from professor where salary between 10000 and 20000;
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+---------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email            | phone      | city    |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+---------+
+|     111 | Dhanashri  | Patil      |     102 | Asst. Prof  |  15000 | 2013-05-01 | patil@gmail.com  | 8465230127 | Jalgaon |
+|     112 | Siddhi     | Nirmale    |     104 | Asst. Prof  |  17000 | 2016-04-15 | siddhi@gmail.com | 9756412380 | Nagpur  |
++---------+------------+------------+---------+-------------+--------+------------+------------------+------------+---------+
+2 rows in set (0.00 sec)
+
+mysql>#"9 Display all professor name, salary and date of joining with decreasing order of salary."
+mysql> select prof_fname,prof_lname,salary,doj from professor order by salary desc;
++------------+------------+--------+------------+
+| prof_fname | prof_lname | salary | doj        |
++------------+------------+--------+------------+
+| Chandra    | Azhad      |  80000 | 2009-01-01 |
+| Tarrak     | Mehta      |  75000 | 2014-01-01 |
+| Vaibhav    | Pallod     |  60000 | 2016-01-01 |
+| Rohit      | Sharma     |  60000 | 2018-05-05 |
+| Karan      | Kangude    |  50000 | 2010-08-01 |
+| Atharva    | Joshi      |  47250 | 2015-01-01 |
+| Lakshmi    | Baviskar   |  40000 | 2017-12-03 |
+| Yash       | Agrawal    |  35000 | 2015-04-01 |
+| Onkar      | Litake     |  31500 | 2015-01-01 |
+| Meena      | Kumari     |  30000 | 2014-10-20 |
++------------+------------+--------+------------+
+10 rows in set (0.02 sec)
+
+mysql>#"10. Display professors name,date of joining and dept_id with salary 30000, 40000 and 50000."
+mysql> select prof_fname,prof_lname,doj,dept_id from professor where salary in(30000,40000,50000);
++------------+------------+------------+---------+
+| prof_fname | prof_lname | doj        | dept_id |
++------------+------------+------------+---------+
+| Karan      | Kangude    | 2010-08-01 |     101 |
+| Meena      | Kumari     | 2014-10-20 |     102 |
+| Lakshmi    | Baviskar   | 2017-12-03 |     104 |
++------------+------------+------------+---------+
+3 rows in set (0.01 sec)
+
+mysql>#"5. Delete professors detail living in pune."
+mysql> delete from professor where city = "Pune";
+Query OK, 3 rows affected (0.02 sec)
+
+mysql> select * from professor;
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+| prof_id | prof_fname | prof_lname | dept_id | designation | salary | doj        | email              | phone      | city    |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+|     102 | Vaibhav    | Pallod     |     103 | Prof        |  60000 | 2016-01-01 | vsp575@gmail.com   | 9467853145 | Mumbai  |
+|     104 | Karan      | Kangude    |     101 | Prof        |  50000 | 2010-08-01 | karan12@gmail.com  | 8465213790 | Nagpur  |
+|     105 | Atharva    | Joshi      |     104 | Prof        |  47250 | 2015-01-01 | ajoshi@gmail.com   | 7945618031 | Mumbai  |
+|     106 | Chandra    | Azhad      |     103 | HOD         |  80000 | 2009-01-01 | cazhad@gmail.com   | 9658741230 | Mumbai  |
+|     107 | Meena      | Kumari     |     102 | Asst. Prof  |  30000 | 2014-10-20 | meenak@gmail.com   | 7845632100 | Latur   |
+|     108 | Lakshmi    | Baviskar   |     104 | Prof        |  40000 | 2017-12-03 | baviskar@gmail.com | 8275234855 | Delhi   |
+|     110 | Tarrak     | Mehta      |     101 | HOD         |  75000 | 2014-01-01 | mehta@gmail.com    | 7617209448 | Jalgaon |
+|     111 | Dhanashri  | Patil      |     102 | Asst. Prof  |  15000 | 2013-05-01 | patil@gmail.com    | 8465230127 | Jalgaon |
+|     112 | Siddhi     | Nirmale    |     104 | Asst. Prof  |  17000 | 2016-04-15 | siddhi@gmail.com   | 9756412380 | Nagpur  |
++---------+------------+------------+---------+-------------+--------+------------+--------------------+------------+---------+
+9 rows in set (0.00 sec)
+
+mysql>

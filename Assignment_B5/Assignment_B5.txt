@@ -1,0 +1,446 @@
+Microsoft Windows [Version 10.0.19041.572]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\Users\varun karwa>mongo
+MongoDB shell version v4.4.1
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("321215a8-a415-4af4-a934-30be5d63907e") }
+MongoDB server version: 4.4.1
+---
+The server generated these startup warnings when booting:
+        2020-10-27T12:51:41.846+05:30: ***** SERVER RESTARTED *****
+        2020-10-27T12:51:45.105+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+---
+        Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+        metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+        The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+        and anyone you share the URL with. MongoDB may use this information to make product
+        improvements and to suggest MongoDB products and deployment options to you.
+
+        To enable free monitoring, run the following command: db.enableFreeMonitoring()
+        To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+> show dbs
+admin          0.000GB
+assignment_b2  0.000GB
+assignment_b4  0.000GB
+config         0.000GB
+local          0.000GB
+vkdb           0.000GB
+> use assignment_b5
+switched to db assignment_b5
+> db.createCollection("movie");
+{ "ok" : 1 }
+> db.movie.insertMany([{"name":"Varun","age":20,"movies":[{"movie_id":101,"genre":"comedy","rating":7.8}]},{"name":"Prachi","age":25,"movies":[{"movie_id":102,"genre":"horror","rating":8.5}]}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("5fa8be5ec34f2a71b3145165"),
+                ObjectId("5fa8be5ec34f2a71b3145166")
+        ]
+}
+
+1.$Push Query:
+> db.movie.update({"name":"Varun"},{$push:{movies:{"movie_id":103,"genre":"action","rating":6.9}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.movie.update({"name":"Prachi"},{$push:{movies:{"movie_id":105,"genre":"romance","rating":7.8}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.movie.find().pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "age" : 20,
+        "movies" : [
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 7.8
+                },
+                {
+                        "movie_id" : 103,
+                        "genre" : "action",
+                        "rating" : 6.9
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : [
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 8.5
+                },
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.8
+                }
+        ]
+}
+> db.movie.insert({"name":"Tejas","age":30,"movies":[{"movie_id":104,"genre":"sci-fi","rating":8.6},{"movie_id":103,"genre":"action","rating":5.7}]});
+WriteResult({ "nInserted" : 1 })
+> db.movie.insert({"name":"Siddhesh","age":24,"movies":[{"movie_id":105,"genre":"romance","rating":7.3},{"movie_id":101,"genre":"comedy","rating":8.3}]});
+WriteResult({ "nInserted" : 1 })
+> db.movie.insert({"name":"Miti","age":23,"movies":[{"movie_id":104,"genre":"sci-fi","rating":8.4},{"movie_id":102,"genre":"horror","rating":6.4}]});
+WriteResult({ "nInserted" : 1 })
+> db.movie.find().pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "age" : 20,
+        "movies" : [
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 7.8
+                },
+                {
+                        "movie_id" : 103,
+                        "genre" : "action",
+                        "rating" : 6.9
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : [
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 8.5
+                },
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.8
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c073c34f2a71b3145167"),
+        "name" : "Tejas",
+        "age" : 30,
+        "movies" : [
+                {
+                        "movie_id" : 104,
+                        "genre" : "sci-fi",
+                        "rating" : 8.6
+                },
+                {
+                        "movie_id" : 103,
+                        "genre" : "action",
+                        "rating" : 5.7
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0c6c34f2a71b3145168"),
+        "name" : "Siddhesh",
+        "age" : 24,
+        "movies" : [
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.3
+                },
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 8.3
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0fcc34f2a71b3145169"),
+        "name" : "Miti",
+        "age" : 23,
+        "movies" : [
+                {
+                        "movie_id" : 104,
+                        "genre" : "sci-fi",
+                        "rating" : 8.4
+                },
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 6.4
+                }
+        ]
+}
+>2.$All Query:
+> db.movie.find({movies:{$all:[{"$elemMatch":{genre:"horror"}}]}}).pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : [
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 8.5
+                },
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.8
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0fcc34f2a71b3145169"),
+        "name" : "Miti",
+        "age" : 23,
+        "movies" : [
+                {
+                        "movie_id" : 104,
+                        "genre" : "sci-fi",
+                        "rating" : 8.4
+                },
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 6.4
+                }
+        ]
+}
+> db.movie.find({movies:{$all:[{"$elemMatch":{genre:"comedy"}},{"$elemMatch":{rating:{$lt:7.5}}}]}}).pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "age" : 20,
+        "movies" : [
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 7.8
+                },
+                {
+                        "movie_id" : 103,
+                        "genre" : "action",
+                        "rating" : 6.9
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0c6c34f2a71b3145168"),
+        "name" : "Siddhesh",
+        "age" : 24,
+        "movies" : [
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.3
+                },
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 8.3
+                }
+        ]
+}
+
+3.$Slice Query:
+> db.movie.find({"movies.rating":{$gt:7}},{name:1,movies:{$slice:1}}).pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "movies" : [
+                {
+                        "movie_id" : 101,
+                        "genre" : "comedy",
+                        "rating" : 7.8
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "movies" : [
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 8.5
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c073c34f2a71b3145167"),
+        "name" : "Tejas",
+        "movies" : [
+                {
+                        "movie_id" : 104,
+                        "genre" : "sci-fi",
+                        "rating" : 8.6
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0c6c34f2a71b3145168"),
+        "name" : "Siddhesh",
+        "movies" : [
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.3
+                }
+        ]
+}
+{
+        "_id" : ObjectId("5fa8c0fcc34f2a71b3145169"),
+        "name" : "Miti",
+        "movies" : [
+                {
+                        "movie_id" : 104,
+                        "genre" : "sci-fi",
+                        "rating" : 8.4
+                }
+        ]
+}
+
+4.$Size Query:
+> db.movie.update({"name":"Prachi"},{$push:{movies:{"movie_id":103,"genre":"action","rating":8.7}}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.movie.find({movies:{$size:3}}).pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : [
+                {
+                        "movie_id" : 102,
+                        "genre" : "horror",
+                        "rating" : 8.5
+                },
+                {
+                        "movie_id" : 105,
+                        "genre" : "romance",
+                        "rating" : 7.8
+                },
+                {
+                        "movie_id" : 103,
+                        "genre" : "action",
+                        "rating" : 8.7
+                }
+        ]
+}
+
+5.$Unwind Operator:
+> db.movie.aggregate({$unwind:"$movies"}).pretty()
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "age" : 20,
+        "movies" : {
+                "movie_id" : 101,
+                "genre" : "comedy",
+                "rating" : 7.8
+        }
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145165"),
+        "name" : "Varun",
+        "age" : 20,
+        "movies" : {
+                "movie_id" : 103,
+                "genre" : "action",
+                "rating" : 6.9
+        }
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : {
+                "movie_id" : 102,
+                "genre" : "horror",
+                "rating" : 8.5
+        }
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : {
+                "movie_id" : 105,
+                "genre" : "romance",
+                "rating" : 7.8
+        }
+}
+{
+        "_id" : ObjectId("5fa8be5ec34f2a71b3145166"),
+        "name" : "Prachi",
+        "age" : 25,
+        "movies" : {
+                "movie_id" : 103,
+                "genre" : "action",
+                "rating" : 8.7
+        }
+}
+{
+        "_id" : ObjectId("5fa8c073c34f2a71b3145167"),
+        "name" : "Tejas",
+        "age" : 30,
+        "movies" : {
+                "movie_id" : 104,
+                "genre" : "sci-fi",
+                "rating" : 8.6
+        }
+}
+{
+        "_id" : ObjectId("5fa8c073c34f2a71b3145167"),
+        "name" : "Tejas",
+        "age" : 30,
+        "movies" : {
+                "movie_id" : 103,
+                "genre" : "action",
+                "rating" : 5.7
+        }
+}
+{
+        "_id" : ObjectId("5fa8c0c6c34f2a71b3145168"),
+        "name" : "Siddhesh",
+        "age" : 24,
+        "movies" : {
+                "movie_id" : 105,
+                "genre" : "romance",
+                "rating" : 7.3
+        }
+}
+{
+        "_id" : ObjectId("5fa8c0c6c34f2a71b3145168"),
+        "name" : "Siddhesh",
+        "age" : 24,
+        "movies" : {
+                "movie_id" : 101,
+                "genre" : "comedy",
+                "rating" : 8.3
+        }
+}
+{
+        "_id" : ObjectId("5fa8c0fcc34f2a71b3145169"),
+        "name" : "Miti",
+        "age" : 23,
+        "movies" : {
+                "movie_id" : 104,
+                "genre" : "sci-fi",
+                "rating" : 8.4
+        }
+}
+{
+        "_id" : ObjectId("5fa8c0fcc34f2a71b3145169"),
+        "name" : "Miti",
+        "age" : 23,
+        "movies" : {
+                "movie_id" : 102,
+                "genre" : "horror",
+                "rating" : 6.4
+        }
+}
+>

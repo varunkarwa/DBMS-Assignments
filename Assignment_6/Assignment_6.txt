@@ -1,0 +1,182 @@
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u root -p
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.21 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| assignment3        |
+| assignment5        |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.06 sec)
+
+mysql> create database assignment6;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use assignment6;
+Database changed
+
+mysql> create table O_EmpId(emp_id int primary key,emp_name varchar(20),salary int);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> create table N_EmpId(emp_id int primary key,emp_name varchar(20),salary int);
+Query OK, 0 rows affected (0.04 sec)
+
+
+mysql> insert into O_EmpId values(101,"Varun Karwa",70000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into O_EmpId values(102,"Tejas Dahad",55000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into O_EmpId values(103,"Prachi Wagh",65000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into O_EmpId values(104,"Bhavika Chuttar",75000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from O_EmpId;
++--------+-----------------+--------+
+| emp_id | emp_name        | salary |
++--------+-----------------+--------+
+|    101 | Varun Karwa     |  70000 |
+|    102 | Tejas Dahad     |  55000 |
+|    103 | Prachi Wagh     |  65000 |
+|    104 | Bhavika Chuttar |  75000 |
++--------+-----------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> delimiter //
+mysql> create procedure p2()
+    ->     begin
+    ->      declare id int;
+    ->      declare name varchar(30);
+    ->      declare sal int;
+    ->      declare v_finished int default 0;
+    ->      declare curr_name CURSOR FOR select emp_id,emp_name,salary from O_EmpId;
+    ->      declare continue handler for 1062 select 'Duplicate' as message;
+    ->      declare continue handler for not found set v_finished=1;
+    ->      open curr_name;
+    ->      read_loop:loop
+    ->      fetch curr_name into id,name,sal;
+    ->      if v_finished=1 then
+    ->      leave read_loop;
+    ->      end if;
+    ->      insert into N_EmpId values(id,name,sal);
+    ->      end loop read_loop;
+    ->      close curr_name;
+    ->      end;
+    ->      //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call p2
+    -> //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from N_EmpId//
++--------+-----------------+--------+
+| emp_id | emp_name        | salary |
++--------+-----------------+--------+
+|    101 | Varun Karwa     |  70000 |
+|    102 | Tejas Dahad     |  55000 |
+|    103 | Prachi Wagh     |  65000 |
+|    104 | Bhavika Chuttar |  75000 |
++--------+-----------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> call p2//
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.00 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.01 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.02 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.03 sec)
+
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into O_EmpId values(105,"Utkarsh",50000)//
+Query OK, 1 row affected (0.01 sec)
+
+mysql> call p2//
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.00 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.00 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.01 sec)
+
++-----------+
+| message   |
++-----------+
+| Duplicate |
++-----------+
+1 row in set (0.02 sec)
+
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from N_EmpId//
++--------+-----------------+--------+
+| emp_id | emp_name        | salary |
++--------+-----------------+--------+
+|    101 | Varun Karwa     |  70000 |
+|    102 | Tejas Dahad     |  55000 |
+|    103 | Prachi Wagh     |  65000 |
+|    104 | Bhavika Chuttar |  75000 |
+|    105 | Utkarsh         |  50000 |
++--------+-----------------+--------+
+5 rows in set (0.00 sec)
+
+mysql>
